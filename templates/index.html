@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Roman Numeral Converter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="card">
+
+    <!-- ── Header ─────────────────────────────────────────────────────── -->
+    <div class="header">
+      <h1>Roman Numeral Converter</h1>
+      <p>Convert between integers and Roman numerals.</p>
+    </div>
+
+    <!-- ── Tab switcher ───────────────────────────────────────────────── -->
+    <!--
+      Each tab carries a data-target attribute pointing to the id of the
+      panel it should reveal. switchTab() in app.js reads this attribute,
+      so adding a new tab+panel pair requires only HTML changes.
+    -->
+    <div class="tabs" role="tablist">
+      <button type="button"
+              class="tab active"
+              role="tab"
+              aria-selected="true"
+              data-target="panel-to-roman">
+        Integer &rarr; Roman
+      </button>
+      <button type="button"
+              class="tab"
+              role="tab"
+              aria-selected="false"
+              data-target="panel-to-int">
+        Roman &rarr; Integer
+      </button>
+    </div>
+
+    <!-- ── Panel: Integer → Roman ─────────────────────────────────────── -->
+    <div id="panel-to-roman" class="panel active">
+      <form id="form-to-roman" data-mode="to_roman" novalidate>
+        <div class="field">
+          <label for="input-number">Integer (1 &ndash; 3999)</label>
+          <input type="number"
+                 id="input-number"
+                 name="number"
+                 min="1"
+                 max="3999"
+                 placeholder="e.g. 2024"
+                 autocomplete="off"
+                 inputmode="numeric" />
+          <p class="hint">Whole numbers only.</p>
+        </div>
+        <button type="submit" id="btn-to-roman">Convert</button>
+        <!-- Result injected here by showSuccess / showError in app.js -->
+        <div id="result-to-roman" class="result-box"></div>
+      </form>
+    </div>
+
+    <!-- ── Panel: Roman → Integer ─────────────────────────────────────── -->
+    <div id="panel-to-int" class="panel">
+      <form id="form-to-int" data-mode="to_int" novalidate>
+        <div class="field">
+          <label for="input-roman">Roman Numeral</label>
+          <input type="text"
+                 id="input-roman"
+                 name="roman"
+                 placeholder="e.g. MMXXIV"
+                 maxlength="15"
+                 autocomplete="off"
+                 spellcheck="false" />
+          <p class="hint">Letters M, D, C, L, X, V, I only.</p>
+        </div>
+        <button type="submit" id="btn-to-int">Convert</button>
+        <!-- Result injected here by showSuccess / showError in app.js -->
+        <div id="result-to-int" class="result-box"></div>
+      </form>
+    </div>
+
+    <!-- ── Quick reference ────────────────────────────────────────────── -->
+    <hr class="divider" />
+
+    <!--
+      aria-expanded is toggled by toggleReference() in app.js.
+      The .ref-arrow span is updated by the same function to reflect state.
+    -->
+    <button type="button"
+            id="reference-toggle"
+            class="reference-toggle"
+            aria-expanded="false"
+            aria-controls="ref-table">
+      <span class="ref-arrow">&#9660;</span> Quick reference
+    </button>
+
+    <table class="reference-table" id="ref-table" aria-hidden="true">
+      <thead>
+        <tr>
+          <th>Symbol</th><th>Value</th>
+          <th>Symbol</th><th>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>I</td><td>1</td>    <td>L</td><td>50</td></tr>
+        <tr><td>IV</td><td>4</td>   <td>XC</td><td>90</td></tr>
+        <tr><td>V</td><td>5</td>    <td>C</td><td>100</td></tr>
+        <tr><td>IX</td><td>9</td>   <td>CD</td><td>400</td></tr>
+        <tr><td>X</td><td>10</td>   <td>D</td><td>500</td></tr>
+        <tr><td>XL</td><td>40</td>  <td>CM</td><td>900</td></tr>
+        <tr><td></td><td></td>       <td>M</td><td>1000</td></tr>
+      </tbody>
+    </table>
+
+  </div><!-- /.card -->
+
+  <!--
+    Loaded at the end of <body> so the DOM is fully parsed before the script
+    runs. The DOMContentLoaded listener in app.js is therefore a safety net,
+    not a dependency. CSP header in app.py allows scripts from 'self' only.
+  -->
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

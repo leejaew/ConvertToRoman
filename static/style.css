@@ -1,0 +1,278 @@
+/*
+ * style.css — All visual styles for the Roman Numeral Converter.
+ *
+ * Structure:
+ *   1. CSS custom properties (design tokens)
+ *   2. Reset & base
+ *   3. Layout
+ *   4. Card
+ *   5. Header
+ *   6. Tab switcher
+ *   7. Panels
+ *   8. Form fields
+ *   9. Submit button
+ *  10. Result box (success / error states)
+ *  11. Quick-reference section
+ *
+ * All colour and spacing values are driven by the tokens in :root so that
+ * future theming (e.g. dark mode) only requires overriding that block.
+ */
+
+/* ── 1. Design tokens ──────────────────────────────────────────────────── */
+:root {
+  --bg:             #f9f9f8;
+  --surface:        #ffffff;
+  --border:         #e5e5e3;
+  --text:           #1a1a1a;
+  --muted:          #737373;
+  --accent:         #2563eb;
+  --accent-hover:   #1d4ed8;
+  --error:          #dc2626;
+  --success-bg:     #f0f9ff;
+  --success-border: #bae6fd;
+  --radius:         10px;
+  --shadow:         0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+}
+
+/* ── 2. Reset & base ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+
+/* ── 3. Layout ─────────────────────────────────────────────────────────── */
+/* Single centred card — no grid/flex children needed at this scale. */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 28px;
+}
+
+/* ── 4. Header ─────────────────────────────────────────────────────────── */
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+}
+
+.header p {
+  font-size: .82rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+/* ── 5. Tab switcher ───────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 22px;
+  gap: 2px;
+}
+
+.tab {
+  flex: 1;
+  padding: 7px 10px;
+  font-size: .8rem;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: background .15s, color .15s;
+  font-family: inherit;
+}
+
+/* Active tab looks "lifted" out of the track. */
+.tab.active {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 1px 2px rgba(0,0,0,.08);
+}
+
+/* ── 6. Panels ─────────────────────────────────────────────────────────── */
+/* Only the active panel is rendered; inactive panels are fully hidden so
+   their form fields don't participate in tab-order or validation. */
+.panel         { display: none; }
+.panel.active  { display: block; }
+
+/* ── 7. Form fields ────────────────────────────────────────────────────── */
+.field {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: .92rem;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  /* Remove browser-native number spinners — the field uses inputmode=numeric
+     for mobile keyboards while the spinner UI is unwanted. */
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+  background: #fff;
+}
+
+/* Applied by JS when server or client validation fails. */
+input.invalid {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px rgba(220,38,38,.08);
+}
+
+.hint {
+  font-size: .75rem;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+/* ── 8. Submit button ──────────────────────────────────────────────────── */
+button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: .88rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, opacity .15s;
+  margin-top: 4px;
+}
+
+button[type="submit"]:hover    { background: var(--accent-hover); }
+button[type="submit"]:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── 9. Result box ─────────────────────────────────────────────────────── */
+.result-box {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  font-size: .88rem;
+  display: none; /* hidden until a conversion is attempted */
+}
+
+/* Modifier classes toggled by JS after each conversion attempt. */
+.result-box.show        { display: block; }
+.result-box.success     { background: var(--success-bg);  border: 1px solid var(--success-border); }
+.result-box.error-state { background: #fff5f5;             border: 1px solid #fecaca; }
+
+.result-label {
+  font-size: .72rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 4px;
+}
+
+.result-value {
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+  color: var(--text);
+}
+
+.error-msg {
+  color: var(--error);
+  font-size: .82rem;
+  font-weight: 500;
+}
+
+/* ── 10. Quick-reference section ───────────────────────────────────────── */
+.divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0 16px;
+}
+
+.reference-toggle {
+  font-size: .78rem;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reference-toggle:hover { color: var(--accent-hover); }
+
+.reference-table {
+  display: none; /* toggled open by JS */
+  margin-top: 12px;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .78rem;
+}
+
+.reference-table.open { display: table; }
+
+.reference-table th {
+  text-align: left;
+  color: var(--muted);
+  font-weight: 500;
+  padding: 4px 8px 4px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.reference-table td {
+  padding: 4px 8px 4px 0;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.reference-table tr:last-child td { border-bottom: none; }
